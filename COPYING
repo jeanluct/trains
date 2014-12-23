@@ -1,8 +1,8 @@
-trains: C++ program for computing train tracks of surface homeomorphisms
+trains3: C++ program for computing train tracks of surface homeomorphisms
 
 http://github.com/jeanluct/trains
 
-Copyright (C) 2008-2014    Toby Hall <T.Hall@liverpool.ac.uk>
+Copyright (C) 2008    Toby Hall <T.Hall@liverpool.ac.uk>
 
 This file is part of trains.
 
