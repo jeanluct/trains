@@ -43,18 +43,27 @@ ofstream oFile;
 
 #ifdef __WINDOWSVERSION
 #ifndef VS2005
-#define THRO(T,N) {{Memo(T);   \
-	if (!ConOutput) oFile.close();                                        \
-	return false;   }}
+// Wrap THRO in do/while(0) so it behaves as one statement in if/else contexts.
+#define THRO(T,N) do { \
+	Memo(T); \
+	if (!ConOutput) { oFile.close(); } \
+	return false; \
+} while (0)
 #else
-#define THRO(T,N) {{RemoteGraph.Messages.push_back(T);   \
-	if (!ConOutput) oFile.close();                                        \
-	return false;   }}                            
+// Same macro-safety pattern for the VS2005 RemoteGraph variant.
+#define THRO(T,N) do { \
+	RemoteGraph.Messages.push_back(T); \
+	if (!ConOutput) { oFile.close(); } \
+	return false; \
+} while (0)
 #endif
 #else
-#define THRO(T,N) {{    \
-	if (!ConOutput) oFile.close();   cout << T << '\n';                                     \
-	return false;   }}
+// Keeps THRO safe as a single statement and allows a trailing semicolon.
+#define THRO(T,N) do { \
+	if (!ConOutput) { oFile.close(); } \
+	cout << T << '\n'; \
+	return false; \
+} while (0)
 #endif
 
 int stringtoint(const string& s)
