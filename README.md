@@ -26,3 +26,13 @@ Enable additional compile-time checks without changing default behavior:
 
 This adds an extended warning set for GNU/Clang (`-Wextra`, `-Wpedantic`,
 `-Wconversion`, `-Wsign-conversion`, etc.) and `/W4` on MSVC.
+
+### Running tests (CTest)
+
+The project includes a CTest-compatible suite under `tests/` focused on library
+coverage (array utilities, braids/horseshoe parsing, graph setup and transforms,
+matrix operations, batch processing, and supporting components).
+
+- `cmake -S . -B build`
+- `cmake --build build`
+- `ctest --test-dir build --output-on-failure`

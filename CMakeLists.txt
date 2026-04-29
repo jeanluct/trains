@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(trains LANGUAGES CXX)
 
+include(CTest)
+
 option(TRAINS_FAST_MATH "Enable -ffast-math" ON)
 option(TRAINS_STRICT_WARNINGS "Enable extra warning checks" OFF)
 
@@ -49,6 +51,10 @@ target_link_libraries(train PRIVATE trains)
 set_target_properties(train PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 if(TRAINS_STRICT_WARNINGS)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

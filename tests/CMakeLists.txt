@@ -1,0 +1,76 @@
+set(TRAINS_TEST_COMMON_SOURCES
+    test_runtime.cpp
+)
+
+set(TRAINS_TEST_COMMON_LIBS
+    trains
+)
+
+add_executable(test_newarray_embedding
+    test_newarray_embedding.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_newarray_embedding PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_newarray_embedding PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_newarray_embedding COMMAND test_newarray_embedding)
+set_tests_properties(test_newarray_embedding PROPERTIES LABELS "library;array;embedding")
+
+add_executable(test_braid_horseshoe_batch
+    test_braid_horseshoe_batch.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_braid_horseshoe_batch PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_braid_horseshoe_batch PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_braid_horseshoe_batch COMMAND test_braid_horseshoe_batch)
+set_tests_properties(test_braid_horseshoe_batch PROPERTIES LABELS "library;braid;horseshoe;batch")
+
+add_executable(test_graph_setup
+    test_graph_setup.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_graph_setup PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_graph_setup PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_graph_setup COMMAND test_graph_setup)
+set_tests_properties(test_graph_setup PROPERTIES LABELS "library;graph;setup")
+
+add_executable(test_graph_matrix
+    test_graph_matrix.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_graph_matrix PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_graph_matrix PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_graph_matrix COMMAND test_graph_matrix)
+set_tests_properties(test_graph_matrix PROPERTIES LABELS "library;graph;matrix")
+
+add_executable(test_graph_io
+    test_graph_io.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_graph_io PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_graph_io PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_graph_io COMMAND test_graph_io)
+set_tests_properties(test_graph_io PROPERTIES LABELS "library;graph;io")
+
+add_executable(test_graph_algorithms
+    test_graph_algorithms.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_graph_algorithms PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_graph_algorithms PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_graph_algorithms COMMAND test_graph_algorithms)
+set_tests_properties(test_graph_algorithms PROPERTIES LABELS "library;graph;algorithms")
+
+add_executable(test_misc_components
+    test_misc_components.cpp
+    ${TRAINS_TEST_COMMON_SOURCES}
+)
+target_include_directories(test_misc_components PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_misc_components PRIVATE ${TRAINS_TEST_COMMON_LIBS})
+add_test(NAME test_misc_components COMMAND test_misc_components)
+set_tests_properties(test_misc_components PROPERTIES LABELS "library;misc")
+
+add_test(
+    NAME test_frontend_horseshoe_ttt
+    COMMAND /bin/sh -c "printf 'horseshoe\n1\n10010\ntrain\nttt\nquit\n' | $<TARGET_FILE:frontend>"
+)
+set_tests_properties(test_frontend_horseshoe_ttt PROPERTIES LABELS "integration;frontend;ttt")
