@@ -99,7 +99,7 @@ class vertex {
 public:
 	void Set(uint label, intarray& edges, uint image);
 	void Print(std::ostream& Out = std::cout, bool showembedding = false); // Displays vertex data
-	uint Valence() {return (Edges.TopIndex());}
+	uint Valence() {return static_cast<uint>(Edges.TopIndex());}
 	uint GetLabel() {return Label;}
 	uint GetImage() {return Image;}
 	intarray GetEdges() {return Edges;}

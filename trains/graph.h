@@ -160,8 +160,8 @@ public:
 	bool IsPeripheral(uint Index) {return (Edges[Index].Type == Peripheral);}
 	uint FromP(long Label) {return OnP(From(Label));}
 	void FindTypes(); //Determines edge types
-	uint NumberEdges() {return Edges.TopIndex();}
-	uint NumberVertices() {return Vertices.TopIndex();}
+	uint NumberEdges() {return static_cast<uint>(Edges.TopIndex());}
+	uint NumberVertices() {return static_cast<uint>(Vertices.TopIndex());}
 	uint From(long Label); //Start vertex of edge
 	uint To(long Label) {return From(-Label);}
 	bool IsProperSubForest(bool* Inset, uint n); //Checks if edge indices in Inset[n+1] form proper subforest

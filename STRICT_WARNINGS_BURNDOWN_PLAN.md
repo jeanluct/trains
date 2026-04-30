@@ -88,6 +88,34 @@ Success criteria:
 - Noticeable drop in conversion warnings originating from headers.
 - No change in observable test behavior.
 
+### Phase 2 status (in progress)
+
+Applied so far:
+
+- Added explicit accessor casts at header boundaries:
+  - `trains/braid.h` (`Length()`)
+  - `trains/edgevert.h` (`Valence()`)
+  - `trains/graph.h` (`NumberEdges()`, `NumberVertices()`)
+
+Validation run:
+
+- `cmake --build build`
+- `ctest --test-dir build --output-on-failure`
+- `cmake --build build-strict` (captured to `strict-warnings-phase2.log`)
+
+Current warning snapshot:
+
+- `-Wconversion`: 90 (from 133 at end of phase 1)
+- `-Wsign-conversion`: 120 (from 124 at end of phase 1)
+- `-Wshadow`: 15 (unchanged)
+- `-Wnull-dereference`: 1 (unchanged)
+
+Phase-2 reduction so far:
+
+- Phase-1 total: 273
+- Current total: 226
+- Eliminated in phase 2 so far: **47 warnings**
+
 ## Phase 3 - Algorithm files conversion cleanup (highest risk)
 
 Target warnings:

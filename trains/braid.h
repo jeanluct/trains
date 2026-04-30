@@ -13,7 +13,7 @@ public:
 	void Tighten() {Word.Tighten();}
 	uint Strings;
 	uint Size() {return Strings;}
-	uint Length() {return Word.TopIndex();}
+	uint Length() {return static_cast<uint>(Word.TopIndex());}
 	uint Permute(uint i); //Where does string i end up?
 	long& operator[] (uint i) {return Word[i];}
 	void Set(uint n, intarray W); //Sets n-braid from word W
@@ -27,4 +27,3 @@ public:
 
 
 #endif
-
