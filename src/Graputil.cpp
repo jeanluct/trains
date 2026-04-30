@@ -41,7 +41,7 @@ long graph::Derivative(long Label)
 	uint Index = FindEdge(Label);
 	if (!Edges[Index].Image.TopIndex()) return 0;
 	if (Label>0) return (Edges[Index].Image[1]);
-	return (-Edges[Index].Image[Edges[Index].Image.TopIndex()]);
+	return (-Edges[Index].Image[static_cast<uint>(Edges[Index].Image.TopIndex())]);
 }
 
 long graph::Derivative(long Label, uint n)
@@ -561,7 +561,7 @@ turn graph::FindTurns()
 			long Found;
 			if ((Found = Turns.Find(Current)) != -1)
 			{
-				Current.Level = Turns[Found].Level;
+				Current.Level = Turns[static_cast<uint>(Found)].Level;
 				if (Current.Level && (!Result.Level || Current.Level<Result.Level)) Result = Current;
 				continue;
 			}
@@ -575,9 +575,9 @@ turn graph::FindTurns()
 				if (Found != -1)
 				{
 					Finished = true;
-					uint FoundLevel = Turns[Found].Level;
+					uint FoundLevel = Turns[static_cast<uint>(Found)].Level;
 					if (!FoundLevel) for (uint l=1; long(l)<=T.TopIndex(); l++) T[l].Level = 0;
-					else for (uint l=1; long(l)<=T.TopIndex(); l++) T[l].Level = FoundLevel+T.TopIndex()+1-l;
+					else for (uint l=1; long(l)<=T.TopIndex(); l++) T[l].Level = static_cast<uint>(FoundLevel+T.TopIndex()+1-l);
 				}
 				else
 				{
@@ -591,7 +591,7 @@ turn graph::FindTurns()
 						if (Current.IsDegenerate())
 						{
 							Finished = true;
-							for (uint l=1; long(l)<=T.TopIndex(); l++) T[l].Level = T.TopIndex()+1-l;
+							for (uint l=1; long(l)<=T.TopIndex(); l++) T[l].Level = static_cast<uint>(T.TopIndex()+1-l);
 						}
 						else T.Add(Current);
 					}
@@ -714,7 +714,7 @@ bool graph::NeedToAbsorb()
 		edge& Now = I++;
 		if (Now.Type == Peripheral) continue;
 		if (OnP(Now.Start) && IsPeripheral(Now.Image[1])) return true;
-		if (OnP(Now.End) && IsPeripheral(Now.Image[Now.Image.TopIndex()])) return true;
+		if (OnP(Now.End) && IsPeripheral(Now.Image[static_cast<uint>(Now.Image.TopIndex())])) return true;
 	} while (!I.AtOrigin());
 	return false;
 }
@@ -727,18 +727,18 @@ bool graph::Collapses(intarray& L)
 		M.Flush();
 		intarray Image = Edges[FindEdge(L[1])].Image;
 		if (L[1]<0) Image.Invert();
-		uint j = Image.TopIndex(); while (IsPeripheral(Image[j])) j--;
-		while (long(j)<=Image.TopIndex()) M[M.TopIndex()+1] = Image[j++];
+		uint j = static_cast<uint>(Image.TopIndex()); while (IsPeripheral(Image[j])) j--;
+		while (long(j)<=Image.TopIndex()) M[static_cast<uint>(M.TopIndex()+1)] = Image[j++];
 		for (j=2; long(j)<L.TopIndex(); j++) //Peripheral edges
 		{
 			Image = Edges[FindEdge(L[j])].Image;
 			if (L[j]<0) Image.Invert();
 			M.Append(Image);
 		}
-		Image = Edges[FindEdge(L[L.TopIndex()])].Image;
-		if (L[L.TopIndex()]<0) Image.Invert();
+		Image = Edges[FindEdge(L[static_cast<uint>(L.TopIndex())])].Image;
+		if (L[static_cast<uint>(L.TopIndex())]<0) Image.Invert();
 		j=1; while (IsPeripheral(Image[j])) j++;
-		for (uint k=1; k<=j; k++) M[M.TopIndex()+1] = Image[k];
+		for (uint k=1; k<=j; k++) M[static_cast<uint>(M.TopIndex()+1)] = Image[k];
 		M.Tighten();
 		if (!M.TopIndex()) return true; 
 		L = M;
@@ -767,7 +767,7 @@ void graph::FindSingularities()
 	//I believe that we must already have found gates to reach this stage. Also must have relabelled.
 	//Make a nicer list of gates and infinitesimal edges
 	//First the gates
-	std::vector<vertexGateInformation> v(Vertices.TopIndex()+1);
+	std::vector<vertexGateInformation> v(static_cast<std::vector<vertexGateInformation>::size_type>(Vertices.TopIndex()+1));
 	uint j=3; //index into Reduction
 	for (uint i=1; static_cast<long>(i)<=Vertices.TopIndex(); ++i)
 	{
@@ -832,11 +832,15 @@ void graph::FindSingularities()
 			int first = *I; ++I; int second = *I;
 			if (first == 0 && second != 1)
 			{
-				cusps[-v[i].gates[second][v[i].gates[second].size()-1]].cusps = v[i].gates.size()-2;
+				cusps[-v[i].gates[static_cast<vector<vector<long> >::size_type>(second)]
+					[v[i].gates[static_cast<vector<vector<long> >::size_type>(second)].size()-1]].cusps =
+					static_cast<int>(v[i].gates.size()-2);
 			}
 			else
 			{
-				cusps[-v[i].gates[first][v[i].gates[first].size()-1]].cusps = v[i].gates.size()-2;
+				cusps[-v[i].gates[static_cast<vector<vector<long> >::size_type>(first)]
+					[v[i].gates[static_cast<vector<vector<long> >::size_type>(first)].size()-1]].cusps =
+					static_cast<int>(v[i].gates.size()-2);
 			}
 		}
 	}
@@ -898,7 +902,7 @@ void graph::FindSingularities()
 				else
 				{
 					intarray& A = Edges[FindEdge(-(*I))].Image;
-					for (uint i=A.TopIndex(); i>=1; --i) image.push_back(-A[i]);
+					for (long i=A.TopIndex(); i>=1; --i) image.push_back(-A[static_cast<uint>(i)]);
 				}
 			}
 			//tighten. First remove interior cancellations
@@ -1114,10 +1118,10 @@ bool graph::SingleVertexEmbeddingTighten(uint Index)
 		if (Crossing == -(Now.Region+1)) ++BR;
 	}
 	int Majority = 0;
-	if (static_cast<double>(TL)> Now.Edges.TopIndex()/2.0) {Majority = Now.Region; --Now.Region;}
-	if (static_cast<double>(BL)> Now.Edges.TopIndex()/2.0) {Majority = -Now.Region; --Now.Region;}
-	if (static_cast<double>(TR)> Now.Edges.TopIndex()/2.0) {Majority = Now.Region+1; ++Now.Region;}
-	if (static_cast<double>(BR)> Now.Edges.TopIndex()/2.0) {Majority = -(Now.Region+1); ++Now.Region;}
+	if (static_cast<double>(TL)> static_cast<double>(Now.Edges.TopIndex())/2.0) {Majority = Now.Region; --Now.Region;}
+	if (static_cast<double>(BL)> static_cast<double>(Now.Edges.TopIndex())/2.0) {Majority = -Now.Region; --Now.Region;}
+	if (static_cast<double>(TR)> static_cast<double>(Now.Edges.TopIndex())/2.0) {Majority = Now.Region+1; ++Now.Region;}
+	if (static_cast<double>(BR)> static_cast<double>(Now.Edges.TopIndex())/2.0) {Majority = -(Now.Region+1); ++Now.Region;}
 
 	if (Majority==0) return false;
 	for (uint i=1; static_cast<long>(i)<=Now.Edges.TopIndex(); ++i)

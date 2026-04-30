@@ -81,7 +81,7 @@ bool graph::CollapseInvariantForest()
 	{
 		for (i=1; i<=n; i++) if (Inset[i])
 		{
-			Push(Labels[i], Edges[FindEdge(Labels[i])].Image.TopIndex());
+			Push(Labels[i], static_cast<uint>(Edges[FindEdge(Labels[i])].Image.TopIndex()));
 			Collapse(Labels[i]);
 		}
 		PullTight();
@@ -303,8 +303,8 @@ bool graph::AbsorbIntoP()
 				for (uint j=1; j<=n; j++) if (Inset[j] && !IsPeripheral(Labels[j]))
 				{
 					uint Index = FindEdge(Labels[j]);
-					if (OnP(Edges[Index].Start)) Push(-Labels[j], Edges[Index].Image.TopIndex());
-					else Push(Labels[j], Edges[Index].Image.TopIndex());
+					if (OnP(Edges[Index].Start)) Push(-Labels[j], static_cast<uint>(Edges[Index].Image.TopIndex()));
+					else Push(Labels[j], static_cast<uint>(Edges[Index].Image.TopIndex()));
 					Collapse(Labels[j]);
 				}
 				PullTight();
@@ -337,10 +337,10 @@ bool graph::AbsorbIntoP()
 				while (!IsPeripheral(Round[k]))
 				{
 					EdgesOut.Add(Round[k]);
-					Separators[Separators.TopIndex()+1] = 0;
+					Separators[static_cast<uint>(Separators.TopIndex()+1)] = 0;
 					k = (long(k)==Round.TopIndex()) ? 1 : k+1;
 				}
-				Separators[Separators.TopIndex()] = 1;
+				Separators[static_cast<uint>(Separators.TopIndex())] = 1;
 				VertexIndex = FindVertex(To(Round[k]));
 			} while (VertexIndex != j);
 			if (EdgesOut.TopIndex() == 1) continue; //No action when only one edge from loop
@@ -354,7 +354,7 @@ bool graph::AbsorbIntoP()
 			}
 			intarray ClassLabels; //Will hold possible labels for equivalence classes
 			for (j=1; long(j)<=Class.TopIndex(); j++)
-				if (ClassLabels.Find(Class[j]) == -1) ClassLabels[ClassLabels.TopIndex()+1] = Class[j];
+				if (ClassLabels.Find(Class[j]) == -1) ClassLabels[static_cast<uint>(ClassLabels.TopIndex()+1)] = Class[j];
 			//If at least 2 classes, insert zero-image edges to separate classes, and push from edges within classes
 			if (ClassLabels.TopIndex() > 1)
 			{
@@ -366,8 +366,8 @@ bool graph::AbsorbIntoP()
 						//First change graph
 						long NewEdgeLabel = NextEdgeLabel++;
 						uint NewVertexLabel = NextVertexLabel++;
-						edge& NewEdge = Edges[Edges.TopIndex()+1];
-						vertex& NewVertex = Vertices[Vertices.TopIndex()+1];
+						edge& NewEdge = Edges[static_cast<uint>(Edges.TopIndex()+1)];
+						vertex& NewVertex = Vertices[static_cast<uint>(Vertices.TopIndex()+1)];
 						uint OldVertexLabel = From(EdgesOut[j]);
 						vertex& OldVertex = Vertices[FindVertex(OldVertexLabel)];
 						//Set up new edge
@@ -425,7 +425,7 @@ bool graph::AbsorbIntoP()
 									NowImage.Insert(++m, Temp2);
 							}
 							if (!NowImage.TopIndex()) continue;
-							long Temp=-NewEdgeLabel, Temp2=-NowImage[NowImage.TopIndex()];
+							long Temp=-NewEdgeLabel, Temp2=-NowImage[static_cast<uint>(NowImage.TopIndex())];
 							if (OldEdgesRound.Find(NowImage[1])!=-1) NowImage.Insert(1, Temp);
 							if (OldEdgesRound.Find(Temp2)!=-1) NowImage.SureAdd(NewEdgeLabel);
 						}
@@ -444,7 +444,7 @@ bool graph::AbsorbIntoP()
 									NowImage.Insert(++m, Temp2);
 							}
 							if (!NowImage.TopIndex()) continue;
-							long Temp=-NewEdgeLabel, Temp2=-NowImage[NowImage.TopIndex()];
+							long Temp=-NewEdgeLabel, Temp2=-NowImage[static_cast<uint>(NowImage.TopIndex())];
 							if (OldEdgesRound.Find(NowImage[1])!=-1) NowImage.Insert(1, Temp);
 							if (OldEdgesRound.Find(Temp2)!=-1) NowImage.SureAdd(NewEdgeLabel);
 						}
@@ -462,7 +462,7 @@ bool graph::AbsorbIntoP()
 						while (EdgesRoundj[l]<0 || !IsPeripheral(EdgesRoundj[l])) l++;
 						//Push all at k vertex, and collapse
 						long SeparatingEdgeLabel = EdgesRoundj[l];
-						Push(-SeparatingEdgeLabel, Edges[FindEdge(SeparatingEdgeLabel)].Image.TopIndex());
+						Push(-SeparatingEdgeLabel, static_cast<uint>(Edges[FindEdge(SeparatingEdgeLabel)].Image.TopIndex()));
 						Collapse(SeparatingEdgeLabel);
 					}
 				}
@@ -503,8 +503,8 @@ bool graph::AbsorbIntoP()
 					//First change graph
 					long NewEdgeLabel = NextEdgeLabel++;
 					uint NewVertexLabel = NextVertexLabel++;
-					edge& NewEdge = Edges[Edges.TopIndex()+1];
-					vertex& NewVertex = Vertices[Vertices.TopIndex()+1];
+					edge& NewEdge = Edges[static_cast<uint>(Edges.TopIndex()+1)];
+					vertex& NewVertex = Vertices[static_cast<uint>(Vertices.TopIndex()+1)];
 					uint OldVertexLabel = From(EdgesOut[j]);
 					vertex& OldVertex = Vertices[FindVertex(OldVertexLabel)];
 					//Set up new edge
@@ -562,7 +562,7 @@ bool graph::AbsorbIntoP()
 								NowImage.Insert(++m, Temp2);
 						}
 						if (!NowImage.TopIndex()) continue;
-						long Temp=-NewEdgeLabel, Temp2= -NowImage[NowImage.TopIndex()];
+						long Temp=-NewEdgeLabel, Temp2= -NowImage[static_cast<uint>(NowImage.TopIndex())];
 						if (OldEdgesRound.Find(NowImage[1])!=-1) NowImage.Insert(1, Temp);
 						if (OldEdgesRound.Find(Temp2)!=-1) NowImage.SureAdd(NewEdgeLabel);
 					}
@@ -581,7 +581,7 @@ bool graph::AbsorbIntoP()
 								NowImage.Insert(++m, Temp2);
 						}
 						if (!NowImage.TopIndex()) continue;
-						long Temp=-NewEdgeLabel, Temp2= -NowImage[NowImage.TopIndex()];
+						long Temp=-NewEdgeLabel, Temp2= -NowImage[static_cast<uint>(NowImage.TopIndex())];
 						if (OldEdgesRound.Find(NowImage[1])!=-1) NowImage.Insert(1, Temp);
 						if (OldEdgesRound.Find(Temp2)!=-1) NowImage.SureAdd(NewEdgeLabel);
 					}
@@ -593,7 +593,7 @@ bool graph::AbsorbIntoP()
 					intarray& EdgesRoundk = Vertices[FindVertex(From(EdgesOut[k]))].Edges;
 					uint l=1; while (!IsPeripheral(EdgesRoundk[l]) || EdgesRoundk[l]<0) l++;
 					//Push and collapse it
-					Push(EdgesRoundk[l], Edges[FindEdge(EdgesRoundk[l])].Image.TopIndex());
+					Push(EdgesRoundk[l], static_cast<uint>(Edges[FindEdge(EdgesRoundk[l])].Image.TopIndex()));
 					Collapse(EdgesRoundk[l]);
 				}
 			}//End of one equivalence class case
@@ -605,8 +605,8 @@ bool graph::AbsorbIntoP()
 			if (OnP(Edges[i].Start))
 				while (IsPeripheral(Edges[i].Image[1])) Edges[i].Image.Remove(1);
 			if (OnP(Edges[i].End))
-				while (IsPeripheral(Edges[i].Image[Edges[i].Image.TopIndex()]))
-					Edges[i].Image.Remove(Edges[i].Image.TopIndex());
+				while (IsPeripheral(Edges[i].Image[static_cast<uint>(Edges[i].Image.TopIndex())]))
+					Edges[i].Image.Remove(static_cast<uint>(Edges[i].Image.TopIndex()));
 		}
 		// Correct images of peripheral edges and vertices
 		for (uint i=1; i<=NumberEdges(); i++)
