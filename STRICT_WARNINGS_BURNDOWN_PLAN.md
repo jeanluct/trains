@@ -1,0 +1,145 @@
+# Strict Warnings Burndown Plan
+
+This plan targets warning reduction while minimizing behavior risk.
+
+## Goals
+
+1. Reduce strict-warning noise in phases.
+2. Keep behavior unchanged.
+3. Re-run tests after each phase and after each risky file batch.
+
+## Baseline
+
+From `strict-warnings.log` under `-DTRAINS_STRICT_WARNINGS=ON`:
+
+- `-Wconversion`: 134
+- `-Wsign-conversion`: 124
+- `-Wextra-semi`: 74
+- `-Wshadow`: 17
+- `-Wunused-parameter`: 16
+- `-Wold-style-cast`: 2
+- `-Wuseless-cast`: 1
+- `-Wnull-dereference`: 1
+
+Hotspots:
+
+- `src/Graphset.cpp`, `src/graph.cpp`, `src/Graputil.cpp`, `src/Graphalg.cpp`
+- `trains/newarray.h`, `trains/graph.h`, `trains/edgevert.h`
+
+## Safety Gates
+
+Run after each phase (and optionally per-file batch in Phase 3):
+
+- `cmake --build build`
+- `ctest --test-dir build --output-on-failure`
+- `cmake --build build-strict`
+
+## Phase 1 - Low-risk noise cleanup (expected big drop, low behavior risk)
+
+Target warnings:
+
+- `-Wextra-semi`
+- `-Wunused-parameter`
+- `-Wold-style-cast`
+- `-Wuseless-cast`
+- trivial `-Wshadow` renames in local scopes
+
+Primary files:
+
+- `trains/newarray.h`
+- `trains/graph.h`
+- `trains/embedding.h`
+- `trains/edgevert.h`
+- `src/train.cpp`, `src/braid.cpp`
+
+Approach:
+
+- Remove trailing `;` after inline constructor bodies.
+- Mark intentionally unused parameters in throwing dummy operators.
+- Replace old-style casts with `static_cast` where obvious.
+- Rename shadowing locals only (no logic changes).
+
+Success criteria:
+
+- Majority of non-conversion warnings removed.
+- Zero test regressions.
+
+## Phase 2 - Type hygiene helpers and accessor normalization (medium risk)
+
+Target warnings:
+
+- recurrent header-level conversion/sign-conversion from helper accessors
+
+Primary files:
+
+- `trains/braid.h`
+- `trains/edgevert.h`
+- `trains/graph.h`
+- `trains/newarray.h`
+
+Approach:
+
+- Introduce explicit casts at narrow boundaries.
+- Normalize `TopIndex()`/size interactions to reduce repeated warning fan-out.
+- Prefer local helper variables (`auto` + explicit cast once) instead of repeated mixed-type expressions.
+
+Success criteria:
+
+- Noticeable drop in conversion warnings originating from headers.
+- No change in observable test behavior.
+
+## Phase 3 - Algorithm files conversion cleanup (highest risk)
+
+Target warnings:
+
+- bulk `-Wconversion` / `-Wsign-conversion`
+
+Primary files (in order):
+
+1. `src/Graphset.cpp`
+2. `src/graph.cpp`
+3. `src/Graputil.cpp`
+4. `src/Graphalg.cpp`
+5. `src/ttt.cpp`, `src/Batch.cpp`
+
+Approach:
+
+- Standardize loop/index variable types per container usage.
+- Avoid implicit signed/unsigned arithmetic in index math.
+- Isolate intentional narrow conversions and make them explicit.
+- Keep refactors small and scoped to one warning cluster at a time.
+
+Success criteria:
+
+- Significant reduction in conversion/sign-conversion warnings.
+- Tests pass after each touched-file batch.
+
+## Phase 4 - Investigate `-Wnull-dereference` diagnostic
+
+Target warning:
+
+- single `-Wnull-dereference` emitted from inlined STL internals
+
+Approach:
+
+- Build minimal reproducer from the implicated `MyArray` assignment path.
+- Determine whether warning is true issue, optimizer artifact, or toolchain false positive.
+- If no actionable bug is found, document and optionally suppress locally/conditionally.
+
+## Test sensitivity assessment
+
+Current CTest suite confidence against accidental behavior changes:
+
+- **High** for gross breakage in core workflows (graph setup, matrix formatting, I/O round-trip, batch parse path, horseshoe->train->TTT integration smoke).
+- **Medium** for subtle algorithmic behavior drift (exact train-track decisions, corner-case reducibility branching, deep singularity/gate edge cases).
+
+Why not higher than medium overall:
+
+- The suite is broad but not exhaustive on branch-level algorithm semantics.
+- Most tests validate invariants and representative flows, not full oracle outputs across many known cases.
+
+Recommended boost before/during Phase 3:
+
+1. Add golden-case fixtures for known braids/horseshoe inputs with expected Thurston type and selected invariants.
+2. Add regression tests around `FindTrack`, `FindReduction`, and singularity reporting outputs.
+3. Add a strict-mode CI job so warning deltas are tracked continuously.
