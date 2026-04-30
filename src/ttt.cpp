@@ -83,7 +83,7 @@ TTT::TTT(graph& G)
 		for (iter = Key[i].begin(); iter != Key[i].end(); iter++)    // Loop over old edges in new edge
 		{
 			long Label = long (*iter);
-			intarray E = G.Edges[G.FindEdge(Label)].Image;
+			intarray edgeImage = G.Edges[G.FindEdge(Label)].Image;
 			int Start, Inc;
 			if (Label>0) //traverse forward
 			{
@@ -91,18 +91,18 @@ TTT::TTT(graph& G)
 			}
 			else
 			{
-				Start = E.TopIndex(); Inc=-1;
+				Start = edgeImage.TopIndex(); Inc=-1;
 			}
-			for (int j=Start; j<=E.TopIndex() && j>=1; j+=Inc)
+			for (int j=Start; j<=edgeImage.TopIndex() && j>=1; j+=Inc)
 			{
-				int K = G.Edges[G.FindEdge(E[j])].Key;
+				int K = G.Edges[G.FindEdge(edgeImage[j])].Key;
 				long Test = (Label>0) ? -LastEdge : LastEdge;
-				if (K>0 && (K != NowEdge || E[j] == Test))
+				if (K>0 && (K != NowEdge || edgeImage[j] == Test))
 				{
 					NowEdge = K;
 					(*iteriter).push_back(K);
 				}
-				if (K>0) LastEdge = (Label>0) ? E[j] : -E[j];
+				if (K>0) LastEdge = (Label>0) ? edgeImage[j] : -edgeImage[j];
 			}
 		}
 		iteriter++;

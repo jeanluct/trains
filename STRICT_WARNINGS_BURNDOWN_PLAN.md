@@ -143,3 +143,41 @@ Recommended boost before/during Phase 3:
 1. Add golden-case fixtures for known braids/horseshoe inputs with expected Thurston type and selected invariants.
 2. Add regression tests around `FindTrack`, `FindReduction`, and singularity reporting outputs.
 3. Add a strict-mode CI job so warning deltas are tracked continuously.
+
+## Phase 1 status (completed)
+
+Applied in this pass:
+
+- removed trailing `;` after inline constructor bodies in:
+  - `trains/newarray.h`
+  - `trains/graph.h`
+  - `trains/embedding.h`
+- removed intentionally unused parameter names in throwing dummy operators:
+  - `trains/edgevert.h`
+- replaced low-risk cast/style issues:
+  - `src/train.cpp` old-style cast -> `static_cast<long>(...)`
+  - `src/Batch.cpp` function pointer cast -> `static_cast<int(*)(int)>(tolower)`
+  - `src/braid.cpp` removed useless cast in horseshoe conversion loop
+- fixed low-risk local shadowing names:
+  - `src/frontend.cpp` matrix-print loop index rename
+  - `src/ttt.cpp` renamed local `E` to `edgeImage`
+
+Validation run:
+
+- `cmake --build build`
+- `ctest --test-dir build --output-on-failure`
+- `cmake --build build-strict` (captured to `strict-warnings-phase1.log`)
+
+Resulting warning counts (phase-1 snapshot):
+
+- `-Wconversion`: 133 (from 134)
+- `-Wsign-conversion`: 124 (unchanged)
+- `-Wshadow`: 15 (from 17)
+- `-Wnull-dereference`: 1 (unchanged)
+- `-Wextra-semi`, `-Wunused-parameter`, `-Wold-style-cast`, `-Wuseless-cast`: resolved in this pass
+
+Total warnings eliminated in Phase 1:
+
+- Baseline total: 369
+- Phase-1 total: 273
+- Eliminated: **96 warnings**

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 
   for (int i = 0; i < k; ++i)
     {
-      w.SureAdd((long int)atoi(argv[2+i]));
+      w.SureAdd(static_cast<long>(atoi(argv[2+i])));
     }
 
   B.Set(n,w);

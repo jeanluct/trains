@@ -65,8 +65,8 @@ template<typename T> class MyArray {
 	void _Remove(uint i, uint d=0) {p.erase(p.begin()+i, p.begin()+i+d+1);} /* Removes elements in Positions i to i+d (origin 0) and shifts down.*/
 	void _Split(uint i, MyArray<T>& A) {A.p.assign(p.begin()+i+1, p.end()); p.erase(p.begin()+i+1, p.end());} /*Splits after position i (origin 0) and places tail in A*/
 public:
-	MyArray(uint /*legacy*/ = 1, uint /*legacy*/=1, uint o=1) :  origin(o) {};
-	MyArray(const MyArray& A) : p(A.p), origin(A.origin) {};
+	MyArray(uint /*legacy*/ = 1, uint /*legacy*/=1, uint o=1) :  origin(o) {}
+	MyArray(const MyArray& A) : p(A.p), origin(A.origin) {}
 	MyArray& operator=(const MyArray&A) {origin = A.origin; p = A.p; return *this;}
 	//	~intarray();
 	//	intarray& operator=(intarray& A);
@@ -140,7 +140,7 @@ template<typename T> class arrayiterator {
 	uint Index;                                   
 	MyArray<T>*  Array;                                   
 public:                                            
-	arrayiterator(MyArray<T>& A) : Index(0), Array(&A) {};
+	arrayiterator(MyArray<T>& A) : Index(0), Array(&A) {}
 	T& Now() {return Array->p[Index];}
 	T& operator++(int) {if (Index<Array->p.size()-1) return Array->p[Index++]; Index=0; return Array->p[Array->p.size()-1];}  /*Post Increment*/              
 	T& operator++() {Index = (Index==Array->p.size()-1) ? 0 : Index+1; return Array->p[Index];}  /* Pre Increment */ 

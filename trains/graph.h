@@ -28,7 +28,7 @@ enum matrixformat {raw, maple, latex};
 
 struct singularity
 {
-	singularity(int prongs_, ::std::list<long> location_, bool interior_) : prongs(prongs_), location(location_), interior(interior_) {};
+	singularity(int prongs_, ::std::list<long> location_, bool interior_) : prongs(prongs_), location(location_), interior(interior_) {}
 	int prongs;
 	::std::list<long> location;
 	bool interior;
@@ -56,7 +56,7 @@ struct vertexGateInformation
 
 struct cuspCounter
 {
-	cuspCounter(long nextEdge_=0, int cusps_=0) : nextEdge(nextEdge_), cusps(cusps_), considered(false) {};
+	cuspCounter(long nextEdge_=0, int cusps_=0) : nextEdge(nextEdge_), cusps(cusps_), considered(false) {}
 	long nextEdge; //Following this edge on the right, what is next edge we come to?
 	int cusps; //And how many cusps to get there?
 	bool considered;
@@ -196,7 +196,7 @@ public:
 	void AddLoop(const intarray& L, const ::std::string& Label) {loops.push_back(L); looplabels.push_back(Label);}
 public:
 	//Graph Setting
-	graph() : Factor(true), DesireEmbedding(true), UtilityFlag(false) {};
+	graph() : Factor(true), DesireEmbedding(true), UtilityFlag(false) {}
 	graph(braid& B); // Generate graph from braid.
 	void Set(braid& B); //Sets graph from braid.
 	void BoundaryPeripheralSet(braid& B); //Sets graph from braid with boundary a peripheral loop

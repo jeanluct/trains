@@ -66,7 +66,10 @@ void braid::Set(horseshoe& H)
 	for (uint i=1; i<=Strings; i++)
 	{
 		if (OnWayDown)
-			for (long j=i-1; j>=long(i+H.Permutation[i]-Strings); j--) Word.SureAdd(j);
+		{
+			const long target = static_cast<long>(i) + H.Permutation[i] - static_cast<long>(Strings);
+			for (long j = static_cast<long>(i) - 1; j >= target; --j) Word.SureAdd(j);
+		}
 		if (H.Permutation[i] == long(Strings)) OnWayDown = true;
 	}
 }

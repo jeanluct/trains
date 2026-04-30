@@ -464,7 +464,7 @@ int main(int argc, char* argv[])
 				   } 
                    vector<string> Result = G.TransitionMatrix(Format);
                    cout << "Transition matrix:" << endl;
-                   for (vector<string>::size_type i=0; i<Result.size(); ++i) cout << Result[i] << endl;   
+                   for (vector<string>::size_type resultIndex=0; resultIndex<Result.size(); ++resultIndex) cout << Result[resultIndex] << endl;   
                 }        
                 break;
                 

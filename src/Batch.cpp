@@ -84,7 +84,7 @@ uint Par(string Inp) //Returns number of parameters passed
 	if (i == string::npos) return 0;
     Inp.erase(0, i);
 	In.clear();
-	transform(Inp.begin(), Inp.end(), Inp.begin(), (int(*)(int)) tolower); //Convert to lower case
+	transform(Inp.begin(), Inp.end(), Inp.begin(), static_cast<int(*)(int)>(tolower)); //Convert to lower case
 	istringstream is(Inp);
 	string word;
 	while (is >> word) In.push_back(word);

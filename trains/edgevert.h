@@ -32,7 +32,7 @@ public:
 	long GetLabel() {return Label;}
 	intarray GetImage() {return Image;}
 	edge operator-() {THROW("Calling dummy operator -",4); return(*this);}
-	bool operator==(edge& E) {THROW("Calling dummy operator =",4); return false;}
+	bool operator==(edge& /*unused*/) {THROW("Calling dummy operator =",4); return false;}
 	friend std::ostream& operator<<(std::ostream& Out, edge E);
 	int Key; //Used for TTT
 };
@@ -104,7 +104,7 @@ public:
 	uint GetImage() {return Image;}
 	intarray GetEdges() {return Edges;}
 	vertex operator-() {THROW("Calling dummy operator -",4); return(*this);}
-	bool operator==(vertex& V) {THROW("Calling dummy operator =",4); return false;}
+	bool operator==(vertex& /*unused*/) {THROW("Calling dummy operator =",4); return false;}
 	friend std::ostream& operator<<(std::ostream& Out, vertex V);
 };
 
