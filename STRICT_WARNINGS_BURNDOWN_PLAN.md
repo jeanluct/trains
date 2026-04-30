@@ -122,6 +122,40 @@ Phase-2 reduction so far:
 - Current total: 126
 - Eliminated in phase 2 so far: **147 warnings**
 
+### Phase 2 continuation and closeout (completed)
+
+Additional passes completed after `phase2d`:
+
+- `src/graph.cpp`, `src/Graphalg.cpp`, `src/Graputil.cpp`, `src/ttt.cpp`, `src/edgevert.cpp`, `src/hshoe.cpp`
+- `src/Batch.cpp`, `src/Matrix.cpp`, `src/braid.cpp`, `src/help.cpp`, `src/frontend.cpp`, `src/train.cpp`
+
+Validation pattern used for each batch:
+
+- `cmake --build build`
+- `ctest --test-dir build --output-on-failure`
+- clean strict rebuild with log capture
+
+Warning snapshots during continuation:
+
+- `strict-warnings-phase2e.log`: total 67
+- `strict-warnings-phase2f.log`: `-Wsign-conversion` 20, `-Wconversion` 13, `-Wnull-dereference` 1 (total 34)
+- `strict-warnings-phase2g.log`: `-Wsign-conversion` 12, `-Wconversion` 11, `-Wnull-dereference` 1 (total 24)
+- `strict-warnings-phase2h.log`: `-Wsign-conversion` 8, `-Wconversion` 6, `-Wnull-dereference` 1 (total 15)
+- `strict-warnings-phase2i.log`: `-Wconversion` 5, `-Wsign-conversion` 2, `-Wnull-dereference` 1 (total 8)
+- `strict-warnings-phase2j.log`: `-Wnull-dereference` 1 (total 1)
+
+Current strict-warning state:
+
+- `-Wconversion`: 0
+- `-Wsign-conversion`: 0
+- `-Wnull-dereference`: 1 (unchanged, emitted via inlined STL path)
+
+Net result from baseline to current:
+
+- Baseline total: 369
+- Current total: 1
+- Eliminated: **368 warnings**
+
 ## Phase 3 - Algorithm files conversion cleanup (highest risk)
 
 Target warnings:

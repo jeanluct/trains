@@ -38,7 +38,7 @@ ofstream File;
 decimal TOL = STARTTOL;
 bool GrowthCheck = true;
 bool ShortSing = true;
-int Precision = cout.precision();
+int Precision = static_cast<int>(cout.precision());
 
 uint Parse(char* In) //Returns number of parameters passed
 {
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 				break;*/
 
 			case 12: //step
-				if (i==1 || !(Counter1 = atoi(Input[1])) ) Counter1 = 1;
+			if (i==1 || !(Counter1 = static_cast<uint>(atoi(Input[1]))) ) Counter1 = 1;
 				if (Assigned) G.Save("xxxxx.tmp");
 				for (Counter2 = 1; Counter2 <= Counter1; Counter2++)
 				{

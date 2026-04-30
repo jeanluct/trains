@@ -61,7 +61,7 @@ void braid::Set(uint n, intarray W)
 void braid::Set(horseshoe& H)
 {
 	Word.Flush();
-	Strings = H.Permutation.TopIndex();
+	Strings = static_cast<uint>(H.Permutation.TopIndex());
 	bool OnWayDown = false;
 	for (uint i=1; i<=Strings; i++)
 	{

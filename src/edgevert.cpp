@@ -61,14 +61,14 @@ edgelist& edgelist::operator=(edgelist& A)
 	if (this == &A) return *this;                        
 	Flush();
 	MaxAssigned = -1;                                      
-	for (int i=0; i<=A.MaxAssigned; i++) Element(i) = A.Element(i);
+	for (long i=0; i<=A.MaxAssigned; i++) Element(static_cast<uint>(i)) = A.Element(static_cast<uint>(i));
 	return *this;
 }
 
 
 long edgelist::Find(edge& Value)                                               
 {
-	for (int i=0; i<=MaxAssigned; i++) if (Element(i) == Value) return (i+origin);  
+	for (long i=0; i<=MaxAssigned; i++) if (Element(static_cast<uint>(i)) == Value) return (i+origin);  
 	return -1;
 }                                                                                    
 
@@ -142,7 +142,7 @@ void edgelist::Rotate(long Angle)
 
 void edgelist::Insert(uint i, edge& Value)
 {
-	for (uint j = TopIndex()+1; j>i; j--) (*this)[j] = (*this)[j-1];
+	for (uint j = static_cast<uint>(TopIndex()+1); j>i; j--) (*this)[j] = (*this)[j-1];
 	(*this)[i] = Value;
 }
 
@@ -256,14 +256,14 @@ vertexlist& vertexlist::operator=(vertexlist& A)
 	if (this == &A) return *this;
 	Flush();
 	MaxAssigned = -1;
-	for (int i=0; i<=A.MaxAssigned; i++) Element(i) = A.Element(i);
+	for (long i=0; i<=A.MaxAssigned; i++) Element(static_cast<uint>(i)) = A.Element(static_cast<uint>(i));
 	return *this;
 }
 
 
 long vertexlist::Find(vertex& Value)
 {
-	for (int i=0; i<=MaxAssigned; i++) if (Element(i) == Value) return (i+origin);
+	for (long i=0; i<=MaxAssigned; i++) if (Element(static_cast<uint>(i)) == Value) return (i+origin);
 	return -1;
 }
 
@@ -337,7 +337,7 @@ void vertexlist::Rotate(long Angle)
 
 void vertexlist::Insert(uint i, vertex& Value)
 {
-	for (uint j = TopIndex()+1; j>i; j--) (*this)[j] = (*this)[j-1];
+	for (uint j = static_cast<uint>(TopIndex()+1); j>i; j--) (*this)[j] = (*this)[j-1];
 	(*this)[i] = Value;
 }
 

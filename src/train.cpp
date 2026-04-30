@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
       w.SureAdd(static_cast<long>(atoi(argv[2+i])));
     }
 
-  B.Set(n,w);
+	B.Set(static_cast<uint>(n),w);
   G.Set(B);
 
   /* decimal g = G.FindTrainTrack(); */ /* Unused */

@@ -88,7 +88,7 @@ uint Par(string Inp) //Returns number of parameters passed
 	istringstream is(Inp);
 	string word;
 	while (is >> word) In.push_back(word);
-	return In.size();
+	return static_cast<uint>(In.size());
 }
 
 void Display(ostream& out, int Prec, bool addNewLines = false)
@@ -274,7 +274,7 @@ bool BatchProcess(istream& iFile, int Prec
 						else
 						{
 							W.SureAdd(gen);
-							if (abs(gen)>static_cast<int>(size)) size = abs(gen);
+							if (abs(gen)>static_cast<int>(size)) size = static_cast<uint>(abs(gen));
 						}
 					}
 					else
@@ -290,7 +290,7 @@ bool BatchProcess(istream& iFile, int Prec
 				size++;
 				if (!autostring && static_cast<int>(size)>str) THRO("Illegal braid generator in batch file",5);
 				if (autostring) B.Set(size,W);
-				else B.Set(str,W);
+				else B.Set(static_cast<uint>(str),W);
 				if (boundaryPeripheral) G.BoundaryPeripheralSet(B);
 				else G.Set(B);
 				gr = G.FindTrainTrack();
@@ -426,7 +426,7 @@ bool BatchProcess(istream& iFile, int Prec
 			{
 				if (i<=2) THRO("Illegal randomhs command in batch file", 5);
 				int numberOfOrbits = stringtoint(In[1]);
-				uint period = stringtoint(In[2]);
+				uint period = static_cast<uint>(stringtoint(In[2]));
 				if (numberOfOrbits < 1 || numberOfOrbits > 100000 || period < 3) THRO("Illegal randomhs command in batch file", 5);
 				HS = true;
 				H.n = 1;
@@ -475,9 +475,9 @@ bool BatchProcess(istream& iFile, int Prec
 		case 14: //randombr
 			{
 				if (i<=3) THRO("Illegal randombr command in batch file", 5);
-				uint numberOfBraids = stringtoint(In[1]);
+				uint numberOfBraids = static_cast<uint>(stringtoint(In[1]));
 				int numberOfStrings = stringtoint(In[2]);
-				uint numberOfGenerators = stringtoint(In[3]);
+				uint numberOfGenerators = static_cast<uint>(stringtoint(In[3]));
 				if (numberOfBraids < 1 || numberOfBraids > 100000 || numberOfStrings<3 || numberOfGenerators<1 || numberOfGenerators > 1000) THRO("Illegal randombr command in batch file", 5);
 				HS = false;
 				for (uint j=0; j<numberOfBraids; ++j)
@@ -497,7 +497,7 @@ bool BatchProcess(istream& iFile, int Prec
 						W.SureAdd(gen);
 						previousGenerator = gen;
 					}
-					B.Set(numberOfStrings,W);
+					B.Set(static_cast<uint>(numberOfStrings),W);
 					if (boundaryPeripheral) G.BoundaryPeripheralSet(B);
 					else G.Set(B);
 					gr = G.FindTrainTrack();

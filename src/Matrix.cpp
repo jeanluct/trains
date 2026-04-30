@@ -17,7 +17,7 @@ matrix::matrix(graph& G, bool includeNonMain) : GrowthDone(false), IrredDone(fal
 {
 	if (includeNonMain)
 	{
-		n = G.Edges.TopIndex();
+		n = static_cast<uint>(G.Edges.TopIndex());
 		Evec = new decimal[n];
 		p = new long*[n];
 		for (uint i = 0; i<n; ++i) p[i] = new long[n];
@@ -40,7 +40,7 @@ matrix::matrix(graph& G, bool includeNonMain) : GrowthDone(false), IrredDone(fal
 		uint i;
 		//Identify main edges
 		G.FindTypes();
-		uint GEdges = G.Edges.TopIndex(); //Total number of edges in G
+		uint GEdges = static_cast<uint>(G.Edges.TopIndex()); //Total number of edges in G
 		n = 0;
 		uint* MainEdges = new uint[GEdges]; //Will Store Indices of main edges
 		for (i=1; i<=GEdges; i++)
