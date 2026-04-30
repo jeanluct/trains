@@ -96,25 +96,31 @@ Applied so far:
   - `trains/braid.h` (`Length()`)
   - `trains/edgevert.h` (`Valence()`)
   - `trains/graph.h` (`NumberEdges()`, `NumberVertices()`)
+- Continued header type-boundary normalization:
+  - `trains/newarray.h` (`Invert()` index variables normalized to `std::size_t`)
+- Added low-risk variable/type boundary normalization in implementation files:
+  - `src/Graphset.cpp` (`BoundaryPeripheralSet`, `IdentityGraph`, `ActOn`, `PrintSingularities`, `Load`)
+  - `src/Batch.cpp` (local loop index rename in horseshoe parsing)
+  - `src/Graputil.cpp` (local variable rename in `SingleVertexEmbeddingTighten`)
 
 Validation run:
 
 - `cmake --build build`
 - `ctest --test-dir build --output-on-failure`
-- `cmake --build build-strict` (captured to `strict-warnings-phase2.log`)
+- `cmake --build build-strict` (captured to `strict-warnings-phase2d.log`)
 
 Current warning snapshot:
 
-- `-Wconversion`: 90 (from 133 at end of phase 1)
-- `-Wsign-conversion`: 120 (from 124 at end of phase 1)
-- `-Wshadow`: 15 (unchanged)
+- `-Wconversion`: 83 (from 133 at end of phase 1)
+- `-Wsign-conversion`: 42 (from 124 at end of phase 1)
+- `-Wshadow`: resolved in this batch
 - `-Wnull-dereference`: 1 (unchanged)
 
 Phase-2 reduction so far:
 
 - Phase-1 total: 273
-- Current total: 226
-- Eliminated in phase 2 so far: **47 warnings**
+- Current total: 126
+- Eliminated in phase 2 so far: **147 warnings**
 
 ## Phase 3 - Algorithm files conversion cleanup (highest risk)
 

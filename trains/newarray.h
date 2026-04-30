@@ -82,13 +82,20 @@ public:
 	void Append(const MyArray<T>& A) {p.insert(p.end(), A.p.begin(), A.p.end());} /* Appends A*/
 	void Prepend(const MyArray<T>& A) {p.insert(p.begin(), A.p.begin(), A.p.end());}
 	void Insert(uint i, const T& Value) {p.insert(p.begin()+i-origin,Value);} /*Array[i] = value, all others shifted up*/
-	void Invert() {for (int i=0, j=static_cast<int>(p.size())-1; i<static_cast<int>(p.size())/2; ++i, --j)
-	{
-		T temp = p[i];
-		p[i] = -p[j];
-		p[j] = -temp;
-	} 
-	if (p.size()%2) p[(p.size()-1)/2]=-p[(p.size()-1)/2]; }/*Reverses order of elements and replaces each with negative (requires unary - on T)*/
+	void Invert() {
+		if (p.empty()) return;
+		std::size_t i = 0;
+		std::size_t j = p.size() - 1;
+		while (i < j)
+		{
+			T temp = p[i];
+			p[i] = -p[j];
+			p[j] = -temp;
+			++i;
+			--j;
+		}
+		if (i == j) p[i] = -p[i];
+	}/*Reverses order of elements and replaces each with negative (requires unary - on T)*/
 	void Split(uint i, MyArray<T>& A) {_Split(i-origin,A);}/*Splits after position i and places tail in A*/
 	void Print(std::ostream& Out = std::cout) const {std::copy(p.begin(), p.end(), std::ostream_iterator<T>(Out, " ")); 
 	Out << std::endl;}

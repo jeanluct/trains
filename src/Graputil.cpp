@@ -1122,23 +1122,23 @@ bool graph::SingleVertexEmbeddingTighten(uint Index)
 	if (Majority==0) return false;
 	for (uint i=1; static_cast<long>(i)<=Now.Edges.TopIndex(); ++i)
 	{
-		uint Index = FindEdge(Now.Edges[i]);
+		uint edgeIndex = FindEdge(Now.Edges[i]);
 		if (Now.Edges[i]>0)
 		{
-			if (!Edges[Index].EI.Path.empty() && Edges[Index].EI.Path.front() == Majority) Edges[Index].EI.Path.erase(Edges[Index].EI.Path.begin());
-			else Edges[Index].EI.Path.insert(Edges[Index].EI.Path.begin(), Majority);
-			Edges[Index].EI.Start = Now.Region;
+			if (!Edges[edgeIndex].EI.Path.empty() && Edges[edgeIndex].EI.Path.front() == Majority) Edges[edgeIndex].EI.Path.erase(Edges[edgeIndex].EI.Path.begin());
+			else Edges[edgeIndex].EI.Path.insert(Edges[edgeIndex].EI.Path.begin(), Majority);
+			Edges[edgeIndex].EI.Start = Now.Region;
 		}
 		else
 		{
 
-			if (!Edges[Index].EI.Path.empty() && Edges[Index].EI.Path.back() == Majority) 
+			if (!Edges[edgeIndex].EI.Path.empty() && Edges[edgeIndex].EI.Path.back() == Majority) 
 			{
-				std::list<int>::iterator I = Edges[Index].EI.Path.end();
-				Edges[Index].EI.Path.erase(--I);
+				std::list<int>::iterator I = Edges[edgeIndex].EI.Path.end();
+				Edges[edgeIndex].EI.Path.erase(--I);
 			}
-			else Edges[Index].EI.Path.push_back(Majority);
-			Edges[Index].EI.End = Now.Region;
+			else Edges[edgeIndex].EI.Path.push_back(Majority);
+			Edges[edgeIndex].EI.End = Now.Region;
 		}
 	}
 	return true;

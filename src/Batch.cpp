@@ -331,11 +331,11 @@ bool BatchProcess(istream& iFile, int Prec
 				HS = true;
 				H.n = 1;
 				H.L[1].s.Flush();
-				for (uint i=0; i<In[1].length(); ++i)
+				for (uint hsCodeIdx=0; hsCodeIdx<In[1].length(); ++hsCodeIdx)
 				{
-					if (In[1][i]!='0' && In[1][i]!='1') THRO("Illegal horseshoe code symbol",5);
-					if (In[1][i]=='0') H.L[1].s[i+1]=0;
-					else H.L[1].s[i+1]=1;
+					if (In[1][hsCodeIdx]!='0' && In[1][hsCodeIdx]!='1') THRO("Illegal horseshoe code symbol",5);
+					if (In[1][hsCodeIdx]=='0') H.L[1].s[hsCodeIdx+1]=0;
+					else H.L[1].s[hsCodeIdx+1]=1;
 				}
 				if (!H.FindPermutation()) THRO("Illegal horseshoe orbit code",5);
 				HSstring = In[1];
