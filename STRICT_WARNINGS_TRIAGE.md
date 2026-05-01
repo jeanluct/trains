@@ -7,7 +7,12 @@ Build profile used:
 
 Log captured in `strict-warnings.log`.
 
+Latest strict snapshot was captured in `strict-warnings-phase2j.log` after
+conversion/sign-conversion cleanup.
+
 ## Warning counts by type
+
+Baseline (`strict-warnings.log`):
 
 - `-Wconversion`: 134
 - `-Wsign-conversion`: 124
@@ -16,6 +21,17 @@ Log captured in `strict-warnings.log`.
 - `-Wunused-parameter`: 16
 - `-Wold-style-cast`: 2
 - `-Wuseless-cast`: 1
+- `-Wnull-dereference`: 1
+
+Current (`strict-warnings-phase2j.log`):
+
+- `-Wconversion`: 0
+- `-Wsign-conversion`: 0
+- `-Wextra-semi`: 0
+- `-Wshadow`: 0
+- `-Wunused-parameter`: 0
+- `-Wold-style-cast`: 0
+- `-Wuseless-cast`: 0
 - `-Wnull-dereference`: 1
 
 ## Hotspots (by file)
@@ -110,6 +126,32 @@ Risk assessment:
 - **Medium until confirmed**, but likely not a direct bug report against STL.
 - Needs targeted repro/minimization before deciding whether to suppress or code-change.
 
+Detailed analysis (remaining warning):
+
+- Reported location is inside libstdc++ (`stl_algobase.h`) because template code from
+  `std::copy`/`std::vector` is inlined into the optimized compile unit.
+- GCC diagnostic backtrace maps this to the project path:
+  - `trains::MyArray<T>::operator=` (`trains/newarray.h`)
+  - called from `trains::graph::MakeIrreducible(bool)` (`src/Graphalg.cpp`)
+- Interpretation: compiler's static analyzer sees at least one feasible path where
+  source/destination pointer could be null at the copy site.
+
+Important nuance:
+
+- This does **not** automatically prove a runtime crash.
+- It can arise from conservative reasoning around empty containers, allocation
+  assumptions, or template expansion under optimization.
+- But because the warning touches copy/assignment in core data structures, it
+  should be treated as unresolved until verified.
+
+Recommended closure workflow:
+
+1. Create a minimal reproducer that exercises the same `MyArray` assignment route.
+2. Run focused tests under `ASan` and `UBSan` on that path.
+3. Audit `MyArray` assignment invariants and allocation/copy preconditions.
+4. If no defect is reproducible, add narrow toolchain-conditional suppression with
+   inline rationale and a link to the reproducer notes.
+
 ## Practical prioritization
 
 If we start fixing warnings, highest ROI is:
@@ -119,3 +161,6 @@ If we start fixing warnings, highest ROI is:
 3. Rebuild strict profile and re-triage remaining conversion/null-deref warnings.
 
 No code behavior changes were made in this triage pass.
+
+Status update: conversion/sign-conversion cleanup is complete; only the single
+`-Wnull-dereference` diagnostic remains pending Phase 4 investigation.

@@ -194,6 +194,53 @@ Approach:
 - Determine whether warning is true issue, optimizer artifact, or toolchain false positive.
 - If no actionable bug is found, document and optionally suppress locally/conditionally.
 
+### Remaining diagnostic detail (current state)
+
+Current warning (from `strict-warnings-phase2j.log`):
+
+- `/usr/include/c++/13/bits/stl_algobase.h:398:17`
+- `warning: potential null pointer dereference [-Wnull-dereference]`
+
+Instantiation/call chain emitted by GCC points to:
+
+- `std::copy` internals in `stl_algobase.h`
+- `std::vector<long>::operator=`
+- `trains::MyArray<long>::operator=` in `trains/newarray.h`
+- `trains::graph::MakeIrreducible(bool)` in `src/Graphalg.cpp`
+
+What this means:
+
+- The warning is not from a direct dereference in user code at the reported file.
+- GCC inlines template/library code and then performs path analysis on the optimized IR.
+- A potentially null destination/source pointer path is inferred in the inlined copy path.
+
+Plausible explanations (ordered by likelihood):
+
+1. Conservative/static-analysis false positive on a valid empty-vector copy path.
+2. Edge case in custom array assignment flow where ownership/state can transiently
+   appear null to analysis despite valid runtime behavior.
+3. Real latent bug if an invalid `MyArray` state is reachable before assignment.
+
+Why we did not "quick-fix" it in Phase 2:
+
+- Any change here touches container assignment semantics used broadly in core algorithms.
+- A cast/index cleanup style fix is not sufficient; this requires semantic verification.
+- Blind suppression would hide a potentially real memory-safety issue.
+
+Investigation plan for Phase 4:
+
+1. Reproduce in a reduced unit/integration case that hits `MakeIrreducible()` assignment.
+2. Build with sanitizers (`ASan`/`UBSan`) and run targeted tests to look for concrete faults.
+3. Inspect `MyArray<T>::operator=` invariants (self-assignment, empty state, allocation,
+   copy length consistency).
+4. If runtime evidence is clean and reproducer indicates analyzer artifact, contain warning
+   suppression to this toolchain/version/path with rationale in code comments.
+
+Exit criteria:
+
+- Either: implement and validate a real fix with tests, warning removed.
+- Or: document and narrowly suppress with reproducible evidence that behavior is safe.
+
 ## Test sensitivity assessment
 
 Current CTest suite confidence against accidental behavior changes:
